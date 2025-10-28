@@ -1,0 +1,9 @@
+PyQt5>=5.15.9
+PySide6>=6.6.0
+transformers>=4.38.0
+Pillow>=10.2.0
+timm>=0.9.12
+ultralytics>=8.2.0
+torch
+pillow-heif>=0.16.0
+
