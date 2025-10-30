@@ -47,6 +47,14 @@ Notes:
 
 ## Run
 ```bash
+# Option A: Makefile (recommended)
+make install
+make run
+
+# Option B: Manual
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 python main.py
 ```
 
@@ -55,8 +63,13 @@ python main.py
 ```bash
 pip install --upgrade pip setuptools wheel
 ```
-- If you prefer PyQt6, you can install `PyQt6` and adapt imports in `main.py`.
 - If downloads are blocked, manually download models or run once with internet access.
+- macOS: If you see a Cocoa plugin error, avoid mixing PyQt5 and PySide6 in the same venv. This app sets Qt plugin paths automatically, but if issues persist:
+  1) Use a fresh venv
+  2) Install only one binding (default works with either):
+     - `pip install PySide6`  (preferred)
+     - or `pip install PyQt5`
+  3) Then run `python main.py`
 
 ## License
 MIT

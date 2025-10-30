@@ -2,21 +2,21 @@ import sys
 import os
 from typing import Dict, List, Tuple
 
-# Qt compatibility: prefer PySide6, fallback to PyQt5
+# Qt compatibility: prefer PyQt5, fallback to PySide6
 try:
-    from PySide6 import QtCore, QtGui, QtWidgets  # type: ignore
-    QT_BINDING = "PySide6"
-except Exception:
     from PyQt5 import QtCore, QtGui, QtWidgets  # type: ignore
     QT_BINDING = "PyQt5"
+except Exception:
+    from PySide6 import QtCore, QtGui, QtWidgets  # type: ignore
+    QT_BINDING = "PySide6"
 
 # Aliases to keep rest of code unchanged
 Qt = QtCore.Qt
 QThread = QtCore.QThread
 try:
-    from PySide6.QtCore import Signal as Signal  # type: ignore
-except Exception:
     from PyQt5.QtCore import pyqtSignal as Signal  # type: ignore
+except Exception:
+    from PySide6.QtCore import Signal as Signal  # type: ignore
 
 QPixmap = QtGui.QPixmap
 QApplication = QtWidgets.QApplication
@@ -54,6 +54,14 @@ except AttributeError:
 def _ensure_qt_platform_plugin():
     """On macOS venvs, help Qt find the 'cocoa' platform plugin."""
     try:
+        # Clear conflicting env that might point to the wrong binding
+        for key in [
+            "QT_QPA_PLATFORM_PLUGIN_PATH",
+            "QT_PLUGIN_PATH",
+        ]:
+            if key in os.environ:
+                os.environ.pop(key, None)
+
         plugins_dir = None
         platforms_dir = None
         if QT_BINDING == "PySide6":
@@ -67,10 +75,10 @@ def _ensure_qt_platform_plugin():
             plugins_dir = os.path.join(qt_dir, "plugins")
             platforms_dir = os.path.join(plugins_dir, "platforms")
         if os.path.isdir(platforms_dir):
-            os.environ.setdefault("QT_QPA_PLATFORM_PLUGIN_PATH", platforms_dir)
+            os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = platforms_dir
         if os.path.isdir(plugins_dir):
-            os.environ.setdefault("QT_PLUGIN_PATH", plugins_dir)
-        os.environ.setdefault("QT_QPA_PLATFORM", "cocoa")
+            os.environ["QT_PLUGIN_PATH"] = plugins_dir
+        os.environ["QT_QPA_PLATFORM"] = "cocoa"
     except Exception:
         # Best-effort only; if this fails Qt will use defaults
         pass
