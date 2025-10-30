@@ -58,6 +58,20 @@ pip install -r requirements.txt
 python main.py
 ```
 
+## Start & Use
+1) Launch the app (see Run above).
+2) Click "Open Image…" and choose an image (png, jpg, jpeg, webp, bmp, tiff, tif, heic, heif).
+3) Click "Analyze Image".
+   - The app will:
+     - Generate a scene caption using ViT+GPT‑2.
+     - Detect objects with YOLOv8n and aggregate them into a list (counts + max confidence).
+4) Read the caption in the right pane and review the "Items Detected" list.
+
+Tips:
+- First run downloads model weights; this can take a few minutes.
+- On Apple Silicon, PyTorch uses MPS if available for faster inference.
+- Very large images can be opened, but analysis may take longer.
+
 ## Troubleshooting
 - If PyTorch or Ultralytics installation fails, try updating pip and setuptools:
 ```bash
@@ -70,6 +84,12 @@ pip install --upgrade pip setuptools wheel
      - `pip install PySide6`  (preferred)
      - or `pip install PyQt5`
   3) Then run `python main.py`
+
+Known messages:
+- Transformers may show deprecation/warning logs (safe to ignore for now). They do not affect functionality.
+
+## Screenshots
+(Optional) Add screenshots of the main window, caption, and item list here.
 
 ## License
 MIT
